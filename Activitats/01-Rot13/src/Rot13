@@ -1,4 +1,58 @@
 public static class Rot13(){
-    char[] alfabetMin = ['a', 'à', 'b', 'c', 'ç', 'd', 'e', 'é', 'è', 'f', 'g', 'h', 'i', 'í', 'ï', 'j', 'k', 'l', 'l·l', 'll', 'm', 'n', 'o', 'ó', 'ò', 'p', 'q', 'r', 's', 't', 'u', 'ú', 'ü', 'v', 'w', 'x', 'y', 'z']
-    char[] alfabetMaj = ['A', 'À', 'B', 'C', 'Ç', 'D', 'E', 'É', 'È', 'F', 'G', 'H', 'I', 'Í', 'Ï', 'J', 'K', 'L', 'L·L', 'LL', 'M', 'N', 'O', 'Ó', 'Ò', 'P', 'Q', 'R', 'S', 'T', 'U', 'Ú', 'Ü', 'V', 'W', 'X', 'Y', 'Z']
+    static String messeg = "ABC";
+
+    static char[] minuscules = {'a','à','b','c','ç','d','e','é','è','f','g',
+        'h','i','í','ï','j','k','l','l·l','ll','m','n','o','ó','ò','p','q','r', 
+        's','t','u','ú','ü','v','w','x','y','z'};
+    static char[] majuscules = {'A','À','B','C','Ç','D','E','É','È','F','G',
+        'H','I','Í','Ï','J','K','L','L·L','LL','M','N','O','Ó','Ò','P','Q','R',
+        'S','T','U','Ú','Ü','V','W','X','Y','Z'};
+    public static boolean isLowerCase(char ch){
+        for (char chMin: minuscules){
+            if (ch = chMin) return true;
+        }
+        return false;
+    }
+    public static int findPos(ch){
+        for (int i = 0; i < minuscules.length; i++){
+            if (Character.toLowerCase(ch) == minuscules[i]) return i; 
+        }
+        return -1;
+    }
+    public static char xifraCaracterRot13(char ch){
+        if (isLowerCase(ch)){
+            return minuscules[(findPos(ch) + 13)%minuscules.length];
+        }else{
+            return majuscules[(findPos(ch) + 13)%majuscules.length];
+        }
+    }
+
+    public static char desxifraCaracterRot13(char ch){
+        if (isLowerCase(ch)){
+            return minuscules[(findPos(ch) - 13)%minuscules.length];
+        }else{
+            return majuscules[(findPos(ch) - 13)%majuscules.length];
+        }
+    }
+    
+    public static String xifraRot13(String messeg){
+        String messegXifrat
+        for (int i = 0; i < messeg.length; i++){
+            messegXifrat += (xifraCaracterRot13(messeg.charAt(i)));
+        }
+        return messegXifrat;
+    }
+
+    public static String desxifraRot13(String messeg){
+        String messegDesxifrat
+        for (int i = 0; i < messeg.length; i++){
+            messegDesxifrat += (desxifraCaracterRot13(messeg.charAt(i)));
+        }
+        return messegDesxifrat;
+    }
+
+    public static void main(){
+        System.out.println("Missatge xifrat:\n" + xifraRot13(messeg))
+        System.out.println("Missatge desxifrat:\n" + desxifraRot13(messeg))
+    }
 }
