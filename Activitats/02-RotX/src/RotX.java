@@ -1,85 +1,85 @@
 public class RotX {
-/*
-    static char[] minuscules = {
-        'a','á','à','b','c','ç','d','e','é','è',
-        'f','g','h','i','í','ì','ï','j','k','l',
-        'm','n','ñ','o','ó','ò','p','q','r','s',
-        't','u','ú','ù','ü','v','w','x','y','z'
+
+    private static final char[] minuscules = {
+        'a', 'à', 'á', 'b', 'c', 'ç', 'd', 'e', 'è', 'é', 'f', 'g', 'h',
+        'i', 'ì', 'í', 'ï', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'ò', 'ó',
+        'p', 'q', 'r', 's', 't', 'u', 'ù', 'ú', 'ü', 'v', 'w', 'x', 'y', 'z'
     };
 
-    static char[] majuscules = {
-        'A','Á','À','B','C','Ç','D','E','É','È',
-        'F','G','H','I','Í','Ì','Ï','J','K','L',
-        'M','N','Ñ','O','Ó','Ò','P','Q','R','S',
-        'T','U','Ú','Ù','Ü','V','W','X','Y','Z'
+    private static final char[] majuscules = {
+        'A', 'À', 'Á', 'B', 'C', 'Ç', 'D', 'E', 'È', 'É', 'F', 'G', 'H',
+        'I', 'Ì', 'Í', 'Ï', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'Ò', 'Ó',
+        'P', 'Q', 'R', 'S', 'T', 'U', 'Ù', 'Ú', 'Ü', 'V', 'W', 'X', 'Y', 'Z'
     };
 
-    public static boolean esMinuscula(char ch) {
-        for (char chMin : minuscules) {
-            if (ch == chMin) return true;
+    public static String xifraRotX(String cadena, int desplaçament) {
+        int n = minuscules.length;
+        int d = ((desplaçament % n) + n) % n;
+
+        StringBuilder resultat = new StringBuilder();
+
+        for (char c : cadena.toCharArray()) {
+            int index = indexOf(minuscules, c);
+            if (index != -1) {
+                resultat.append(minuscules[(index + d) % n]);
+                continue;
+            }
+            index = indexOf(majuscules, c);
+            if (index != -1) {
+                resultat.append(majuscules[(index + d) % n]);
+                continue;
+            }
+            resultat.append(c);
         }
-        return false;
+
+        return resultat.toString();
     }
 
-    public static int findPos(char ch) {
-        char chMin = Character.toLowerCase(ch);
-        for (int i = 0; i < minuscules.length; i++) {
-            if (chMin == minuscules[i]) return i;
+    public static String desxifraRotX(String cadena, int desplaçament) {
+        int n = minuscules.length;
+        int d = ((desplaçament % n) + n) % n;
+        return xifraRotX(cadena, n - d);
+    }
+
+    public static void forcaBrutaRotX(String cadenaXifrada) {
+        int n = minuscules.length;
+        System.out.println("Missatge xifrat: " + cadenaXifrada);
+        System.out.println("----------------");
+        for (int desplaçament = 1; desplaçament <= n; desplaçament++) {
+            System.out.println("(" + desplaçament + ")->" + desxifraRotX(cadenaXifrada, desplaçament));
+        }
+    }
+
+    private static int indexOf(char[] alfabet, char c) {
+        for (int i = 0; i < alfabet.length; i++) {
+            if (alfabet[i] == c) {
+                return i;
+            }
         }
         return -1;
     }
 
-    public static char xifraCaracterRot13(char ch) {
-        int pos = findPos(ch);
-        if (pos == -1) return ch;
-        int novaPos = (pos + 13) % minuscules.length;
-        return esMinuscula(ch) ? minuscules[novaPos] : majuscules[novaPos];
-    }
-
-    public static char desxifraCaracterRot13(char ch) {
-        int pos = findPos(ch);
-        if (pos == -1) return ch;
-        int novaPos = ((pos - 13) + minuscules.length) % minuscules.length;
-        return esMinuscula(ch) ? minuscules[novaPos] : majuscules[novaPos];
-    }
-
-    public static String xifraRot13(String cadena) {
-        String resultat = "";
-        for (int i = 0; i < cadena.length(); i++) {
-            resultat += xifraCaracterRot13(cadena.charAt(i));
-        }
-        return resultat;
-    }
-
-    public static String desxifraRot13(String cadena) {
-        String resultat = "";
-        for (int i = 0; i < cadena.length(); i++) {
-            resultat += desxifraCaracterRot13(cadena.charAt(i));
-        }
-        return resultat;
-    }
-
     public static void main(String[] args) {
-        String[] proves = {
-            "ABC",
-            "XYZ",
-            "Hola, Mr. calçot",
-            "Perdó, per tu què és?"
-        };
+        int[] desplaçaments = {0, 2, 4, 6};
+        String[] missatges = {"ABC", "XYZ", "Hola, Mr. calçot", "Perdó, per tu què és?"};
 
         System.out.println("Xifrat");
-        System.out.println("---------");
-        for (String p : proves) {
-            System.out.println(p + "\t\t=> " + xifraRot13(p));
+        System.out.println("------");
+        for (String missatge : missatges) {
+            for (int d : desplaçaments) {
+                System.out.println("(" + d + ")-" + missatge + "\t=> " + xifraRotX(missatge, d));
+            }
         }
 
         System.out.println();
         System.out.println("Desxifrat");
         System.out.println("---------");
-        for (String p : proves) {
-            String xifrat = xifraRot13(p);
-            System.out.println(xifrat + "\t=> " + desxifraRot13(xifrat));
+        for (int d : desplaçaments) {
+            String xifrat = xifraRotX("Perdó, per tu què és?", d);
+            System.out.println("(" + d + ")" + xifrat + "\t=> " + desxifraRotX(xifrat, d));
         }
+
+        System.out.println();
+        forcaBrutaRotX(xifraRotX("Perdó, per tu què és?", 6));
     }
-*/
 }
