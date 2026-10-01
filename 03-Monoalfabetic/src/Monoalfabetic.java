@@ -1,25 +1,20 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 public class Monoalfabetic {
 
-    static char[] minuscules = {
-        'a','á','à','b','c','ç','d','e','é','è',
-        'f','g','h','i','í','ì','ï','j','k','l',
-        'm','n','ñ','o','ó','ò','p','q','r','s',
-        't','u','ú','ù','ü','v','w','x','y','z'
-    };
-    public static char[] alfabetXifrat;
-
-    static char[] majuscules = {
+    private static final char[] alfabetMajuscules = {
         'A','Á','À','B','C','Ç','D','E','É','È',
         'F','G','H','I','Í','Ì','Ï','J','K','L',
         'M','N','Ñ','O','Ó','Ò','P','Q','R','S',
         'T','U','Ú','Ù','Ü','V','W','X','Y','Z'
     };
 
-    public static char[] permutaAlfabet(char[] alfabet){
-        char[] arrayPermutat = null;
+    static char[] alfabetXifrat;
 
+    
+    public static char[] permutaAlfabet(char[] alfabet){
         List<Character> permutat = new ArrayList<>();
         for (char c : alfabet) {
             permutat.add(c);
@@ -27,6 +22,7 @@ public class Monoalfabetic {
 
         Collections.shuffle(permutat);
 
+        char[] arrayPermutat = new char[permutat.size()];
         for (int i = 0; i < permutat.size(); i++) {
             arrayPermutat[i] = permutat.get(i);
         }
@@ -34,48 +30,59 @@ public class Monoalfabetic {
         return arrayPermutat;
     }
 
-    public static int findPos(char ch, boolean xifra) {
-        char chMin = Character.toLowerCase(ch);
-        if (xifra){
-            for (int i = 0; i < minuscules.length; i++) {
-                if (chMin == minuscules[i]) return i;
-            }
-            return -1;
-        }else{
-            for (int i = 0; i < minuscules.length; i++) {
-                if (chMin == alfabetXifrat[i]) return i;
-            }
-            return -1;
+    public static int findPos(char ch, char[] alfabet) {
+        char chMajuscula = Character.toUpperCase(ch);
+        for (int i = 0; i < alfabet.length; i++) {
+            if (chMajuscula == alfabet[i]) return i;
         }
+        return -1;
     }
 
-    public static char xifraCaracter(char ch) {
-        int pos = findPos(ch, true);
-        return alfabetXifrat[pos];
+    public static char transformaCaracter(char ch, char[] origen, char[] desti) {
+        int pos = findPos(ch, origen);
+        if (pos == -1) return ch;
+        char substitut = desti[pos];
+        return Character.isLowerCase(ch) ? Character.toLowerCase(substitut) : substitut;
     }
 
-    public static char desxifraCaracter(char ch) {
-        int pos = findPos(ch, false);
-        return minuscules[pos];
-    }
-
-    public static String xifra(String cadena) {
-        String resultat = "";
-        for (int i = 0; i < cadena.length(); i++) {
-            resultat += xifraCaracterRot13(cadena.charAt(i));
+    private static String transforma(String cadena, char[] origen, char[] desti) {
+        StringBuilder resultat = new StringBuilder();
+        for (char ch : cadena.toCharArray()) {
+            resultat.append(transformaCaracter(ch, origen, desti));
         }
-        return resultat;
+        return resultat.toString();
     }
 
-    public static String desxifra(String cadena) {
-        String resultat = "";
-        for (int i = 0; i < cadena.length(); i++) {
-            resultat += desxifraCaracterRot13(cadena.charAt(i));
-        }
-        return resultat;
+    public static String xifraMonoAlfa(String cadena) {
+        return transforma(cadena, alfabetMajuscules, alfabetXifrat);
+    }
+
+    public static String desxifraMonoAlfa(String cadena) {
+        return transforma(cadena, alfabetXifrat, alfabetMajuscules);
     }
 
     public static void main(String[] args) {
-        
+        alfabetXifrat = permutaAlfabet(alfabetMajuscules);
+
+        System.out.println(alfabetMajuscules);
+        System.out.println(alfabetXifrat);
+
+        String[] tests = {
+            "Test 01 àrbitre, coixí, Perímetre",
+            "Test 02 Taüll, DÍA, año",
+            "Test 03 Peça, Òrrius, Bòvila"
+        };
+
+        System.out.println("Xifratge:");
+        String[] xifrats = new String[tests.length];
+        for (int i = 0; i < tests.length; i++) {
+            xifrats[i] = xifraMonoAlfa(tests[i]);
+            System.out.println(tests[i] + " -> " + xifrats[i]);
+        }
+
+        System.out.println("Desxifratge:");
+        for (String xifrat : xifrats) {
+            System.out.println(xifrat + " -> " + desxifraMonoAlfa(xifrat));
+        }
     }
 }
