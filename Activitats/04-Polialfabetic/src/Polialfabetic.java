@@ -53,22 +53,22 @@ public class Polialfabetic {
         return Character.isLowerCase(ch) ? Character.toLowerCase(substitut) : substitut;
     }
 
-    public static String xifraPoliAlfa(String cadena) {
+    public static String transforma(String cadena, boolean xifra) {
         StringBuilder resultat = new StringBuilder();
         for (char ch : cadena.toCharArray()) {
             permutaAlfabet();
-            resultat.append(transformaCaracter(ch, alfabetMajuscules, alfabetXifrat));
+            if (xifra) resultat.append(transformaCaracter(ch, alfabetMajuscules, alfabetXifrat));
+            else resultat.append(transformaCaracter(ch, alfabetXifrat, alfabetMajuscules));
         }
         return resultat.toString();
     }
 
+    public static String xifraPoliAlfa(String cadena) {
+        return transforma(cadena, true);
+    }
+
     public static String desxifraPoliAlfa(String cadena) {
-        StringBuilder resultat = new StringBuilder();
-        for (char ch : cadena.toCharArray()) {
-            permutaAlfabet();
-            resultat.append(transformaCaracter(ch, alfabetXifrat, alfabetMajuscules));
-        }
-        return resultat.toString();
+        return transforma(cadena, false);
     }
 
     public static void main(String[] args) {
